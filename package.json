@@ -5,8 +5,10 @@
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@cloudflare/itty-router-openapi": "^0.1.5",
+    "@cloudflare/kv-asset-handler": "~0.1.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
+    "@tauri-apps/api": "^1.3.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -75,16 +77,18 @@
     "webpack-dev-server": "^4.6.0",
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^6.4.1",
-    "worktop": "^0.8.0-next.14",
-    "@cloudflare/kv-asset-handler": "~0.1.2"
+    "worktop": "^0.8.0-next.14"
   },
   "scripts": {
-    "start": "PORT=3100 node scripts/start.js",
+    "start": "npm run tauri:dev",
+    "dev": "BROWSER=none PORT=3100 node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "worker:dev": "wrangler dev src/worker/index.ts --port 3102 --local --persist-to=./wrangler-local-state",
-    "worker:deploy": "wrangler publish src/worker/index.ts --name=react-cf -c wrangler.toml",
-    "worker:logs": "wrangler tail --format=pretty"
+    "worker:deploy": "wrangler publish src/worker/index.ts -c wrangler.toml",
+    "worker:logs": "wrangler tail --format=pretty",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev"
   },
   "eslintConfig": {
     "extends": [

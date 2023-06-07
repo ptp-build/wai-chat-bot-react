@@ -1,4 +1,5 @@
-use crate::{conf::AppConf, utils};
+use crate::{
+  conf::AppConf, utils};
 use log::info;
 use std::time::SystemTime;
 use tauri::{utils::config::WindowUrl, window::WindowBuilder, Manager};
@@ -118,8 +119,8 @@ pub mod cmd {
         .title("Control Center")
         .resizable(true)
         .fullscreen(false)
-        .inner_size(1200.0, 700.0)
-        .min_inner_size(1000.0, 600.0)
+        .inner_size(300.0, 600.0)
+        .min_inner_size(300.0, 600.0)
         .build()
         .unwrap();
       } else {
@@ -128,6 +129,39 @@ pub mod cmd {
         main_win.set_focus().unwrap();
       }
     });
+  }
+
+  #[command]
+  pub fn wa_window_custom(
+    app: tauri::AppHandle,
+    label: String,
+    title: String,
+    url: String,
+    script: Option<String>,
+  ) {
+    info!("wa_window_custom: {} :=> {}", title, url);
+    let win = app.get_window(&label);
+    if win.is_none() {
+      tauri::async_runtime::spawn(async move {
+        tauri::WindowBuilder::new(&app, label, tauri::WindowUrl::App(url.parse().unwrap()))
+            .initialization_script(&script.unwrap_or_default())
+            .initialization_script(include_str!("../scripts/core.js"))
+            .initialization_script(include_str!("../scripts/wai_jquery.js"))
+            .initialization_script(include_str!("../scripts/wai_rpa.js"))
+            .title(title)
+            .position(320.0,160.0)
+            .inner_size(960.0, 700.0)
+            .resizable(true)
+            .build()
+            .unwrap();
+      });
+    } else if let Some(v) = win {
+      if !v.is_visible().unwrap() {
+        v.show().unwrap();
+      }
+      v.eval("window.location.reload()").unwrap();
+      v.set_focus().unwrap();
+    }
   }
 
   #[command]

@@ -1,9 +1,9 @@
 {
   "build": {
-    "beforeDevCommand": "npm run dev:fe",
-    "beforeBuildCommand": "npm run build:fe",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist"
+    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "npm run dev",
+    "devPath": "http://localhost:3100",
+    "distDir": "../build"
   },
   "package": {
     "productName": "Wai",

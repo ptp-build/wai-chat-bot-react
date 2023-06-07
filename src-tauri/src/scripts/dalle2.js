@@ -1,8 +1,8 @@
 // *** Core Script - DALL·E 2 ***
 
 function init() {
-  document.addEventListener("click", (e) => {
-    const origin = e.target.closest("a");
+  document.addEventListener('click', e => {
+    const origin = e.target.closest('a');
     if (!origin || !origin.target) return;
     if (origin && origin.href && origin.target !== '_self') {
       if (/\/(login|signup)$/.test(window.location.href)) {
@@ -27,14 +27,11 @@ function init() {
       searchInput.focus();
       searchInput.value = query;
     }
-  }, 200)
+  }, 200);
 }
 
-if (
-  document.readyState === "complete" ||
-  document.readyState === "interactive"
-) {
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
   init();
 } else {
-  document.addEventListener("DOMContentLoaded", init);
+  document.addEventListener('DOMContentLoaded', init);
 }

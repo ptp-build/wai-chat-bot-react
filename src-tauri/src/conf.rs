@@ -18,7 +18,8 @@ pub const GITHUB_PROMPTS_CSV_URL: &str =
 
 pub const APP_CONF_PATH: &str = "chat.conf.json";
 // pub const WAI_URL: &str = "https://wai.chat";
-pub const CHATGPT_URL: &str = "https://chat.openai.com";
+// pub const CHATGPT_URL: &str = "https://chat.openai.com";
+pub const CHATGPT_URL: &str = "index.html";
 pub const UA_MOBILE: &str = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
 
 macro_rules! pub_struct {
@@ -82,10 +83,10 @@ impl AppConf {
       stay_on_top: false,
       main_dashboard: false,
       tray_dashboard: false,
-      main_width: 1289.0,
-      main_height: 800.0,
-      tray_width: 360.0,
-      tray_height: 540.0,
+      main_width: 300.0,
+      main_height: 300.0,
+      tray_width: 300.0,
+      tray_height: 300.0,
       main_origin: CHATGPT_URL.into(),
       tray_origin: CHATGPT_URL.into(),
       default_origin: CHATGPT_URL.into(),

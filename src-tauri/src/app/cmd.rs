@@ -1,4 +1,7 @@
-use crate::utils;
+use crate::{
+  app::window,
+  utils,
+};
 use log::error;
 use std::{fs, path::PathBuf};
 use tauri::{api, command, AppHandle, Manager};
@@ -50,6 +53,17 @@ pub fn open_link(app: AppHandle, url: String) {
 }
 
 #[command]
+pub fn open_window(app: AppHandle, url: String) {
+  window::cmd::wa_window_custom(
+    app,
+    "ChatGpt".into(),
+    "ChatGpt".into(),
+    url.into(),
+    None,
+  );
+}
+
+#[command]
 pub fn run_check_update(app: AppHandle, silent: bool, has_msg: Option<bool>) {
   utils::run_check_update(app, silent, has_msg);
 }
@@ -72,3 +86,4 @@ pub async fn get_data(app: AppHandle, url: String, is_msg: Option<bool>) -> Opti
     None
   })
 }
+

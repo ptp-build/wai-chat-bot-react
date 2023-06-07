@@ -22,8 +22,8 @@ async fn main() {
   utils::create_chatgpt_prompts();
   let context = tauri::generate_context!();
 
-  gpt::download_list("chat.download.json", "download", None, None);
-  gpt::download_list("chat.notes.json", "notes", None, None);
+  // gpt::download_list("chat.download.json", "download", None, None);
+  // gpt::download_list("chat.notes.json", "notes", None, None);
 
   let mut log = tauri_plugin_log::Builder::default()
     .targets([
@@ -58,6 +58,8 @@ async fn main() {
       cmd::download,
       cmd::save_file,
       cmd::open_link,
+      cmd::open_window,
+      cmd::open_window,
       cmd::run_check_update,
       cmd::open_file,
       cmd::get_data,
@@ -76,6 +78,7 @@ async fn main() {
       conf::cmd::form_cancel,
       conf::cmd::form_msg,
       window::cmd::wa_window,
+      window::cmd::wa_window_custom,
       window::cmd::control_window,
       window::cmd::window_reload,
       window::cmd::dalle2_search_window,

@@ -1,17 +1,5 @@
-$(() => {
-  window.hasWrite = false;
-  window.timer = setInterval(() => {
-    if ($('textarea')) {
-      if (!window.hasWrite) {
-        window.hasWrite = true;
-        $('textarea').val('hi');
-      }
-      $('textarea').trigger('focus');
-    }
-  }, 1000);
-});
 async function init() {
-  console.log('zepto init');
+  console.log('rpa init');
 }
 
 window.simulateEnterKey = () => {

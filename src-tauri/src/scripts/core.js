@@ -5,33 +5,33 @@ function transformCallback(callback = () => {}, once = false) {
   const identifier = uid();
   const prop = `_${identifier}`;
   Object.defineProperty(window, prop, {
-    value: (result) => {
+    value: result => {
       if (once) {
         Reflect.deleteProperty(window, prop);
       }
-      return callback(result)
+      return callback(result);
     },
     writable: false,
     configurable: true,
-  })
+  });
   return identifier;
 }
 async function invoke(cmd, args) {
   return new Promise((resolve, reject) => {
     if (!window.__TAURI_POST_MESSAGE__) reject('__TAURI_POST_MESSAGE__ does not exist!');
-    const callback = transformCallback((e) => {
+    const callback = transformCallback(e => {
       resolve(e);
       Reflect.deleteProperty(window, `_${error}`);
-    }, true)
-    const error = transformCallback((e) => {
+    }, true);
+    const error = transformCallback(e => {
       reject(e);
       Reflect.deleteProperty(window, `_${callback}`);
-    }, true)
+    }, true);
     window.__TAURI_POST_MESSAGE__({
       cmd,
       callback,
       error,
-      ...args
+      ...args,
     });
   });
 }
@@ -44,8 +44,8 @@ async function message(message) {
       message: message.toString(),
       title: null,
       type: null,
-      buttonLabel: null
-    }
+      buttonLabel: null,
+    },
   });
 }
 
@@ -62,39 +62,45 @@ async function init() {
   async function platform() {
     return invoke('platform', {
       __tauriModule: 'Os',
-      message: { cmd: 'platform' }
+      message: { cmd: 'platform' },
     });
   }
 
   if (__TAURI_METADATA__.__currentWindow.label !== 'tray') {
-    const _platform = await platform();
-    const chatConf = await invoke('get_app_conf') || {};
-    if (/darwin/.test(_platform) && !chatConf.titlebar) {
-      const topStyleDom = document.createElement("style");
-      topStyleDom.innerHTML = `#chatgpt-app-window-top{position:fixed;top:0;z-index:999999999;width:100%;height:24px;background:transparent;cursor:grab;cursor:-webkit-grab;user-select:none;-webkit-user-select:none;}#chatgpt-app-window-top:active {cursor:grabbing;cursor:-webkit-grabbing;}`;
-      document.head.appendChild(topStyleDom);
-      const topDom = document.createElement("div");
-      topDom.id = "chatgpt-app-window-top";
-      document.body.appendChild(topDom);
-
-      if (window.location.host === 'chat.openai.com') {
-        const nav = document.body.querySelector('nav');
-        if (nav) {
-          const currentPaddingTop = parseInt(window.getComputedStyle(document.querySelector('nav'), null).getPropertyValue('padding-top').replace('px', ''), 10);
-          const navStyleDom = document.createElement("style");
-          navStyleDom.innerHTML = `nav{padding-top:${currentPaddingTop + topDom.clientHeight}px !important}`;
-          document.head.appendChild(navStyleDom);
-        }
-      }
-
-      topDom.addEventListener("mousedown", () => invoke("drag_window"));
-      topDom.addEventListener("touchstart", () => invoke("drag_window"));
-      topDom.addEventListener("dblclick", () => invoke("fullscreen"));
-    }
+    // const _platform = await platform();
+    // const chatConf = (await invoke('get_app_conf')) || {};
+    // if (/darwin/.test(_platform) && !chatConf.titlebar) {
+    // const topStyleDom = document.createElement('style');
+    // topStyleDom.innerHTML = `#chatgpt-app-window-top{position:fixed;top:0;z-index:999999999;width:100%;height:24px;background:transparent;cursor:grab;cursor:-webkit-grab;user-select:none;-webkit-user-select:none;}#chatgpt-app-window-top:active {cursor:grabbing;cursor:-webkit-grabbing;}`;
+    // document.head.appendChild(topStyleDom);
+    // const topDom = document.createElement('div');
+    // topDom.id = 'chatgpt-app-window-top';
+    // document.body.appendChild(topDom);
+    // if (window.location.host === 'chat.openai.com') {
+    //   const nav = document.body.querySelector('nav');
+    //   if (nav) {
+    //     const currentPaddingTop = parseInt(
+    //       window
+    //         .getComputedStyle(document.querySelector('nav'), null)
+    //         .getPropertyValue('padding-top')
+    //         .replace('px', ''),
+    //       10
+    //     );
+    //     const navStyleDom = document.createElement('style');
+    //     navStyleDom.innerHTML = `nav{padding-top:${
+    //       currentPaddingTop + topDom.clientHeight
+    //     }px !important}`;
+    //     document.head.appendChild(navStyleDom);
+    //   }
+    // }
+    // topDom.addEventListener('mousedown', () => invoke('drag_window'));
+    // topDom.addEventListener('touchstart', () => invoke('drag_window'));
+    // topDom.addEventListener('dblclick', () => invoke('fullscreen'));
+    // }
   }
 
-  document.addEventListener("click", (e) => {
-    const origin = e.target.closest("a");
+  document.addEventListener('click', e => {
+    const origin = e.target.closest('a');
     if (!origin || !origin.target) return;
     if (origin && origin.href && origin.target !== '_self') {
       invoke('open_link', { url: origin.href });
@@ -102,14 +108,18 @@ async function init() {
   });
 
   // Fix Chinese input method "Enter" on Safari
-  document.addEventListener("keydown", (e) => {
-    if(e.keyCode == 229) e.stopPropagation();
-  }, true)
+  document.addEventListener(
+    'keydown',
+    e => {
+      if (e.keyCode == 229) e.stopPropagation();
+    },
+    true
+  );
 
   if (window.location.host === 'chat.openai.com') {
-    window.__sync_prompts = async function() {
+    window.__sync_prompts = async function () {
       await invoke('sync_prompts', { time: Date.now() });
-    }
+    };
   }
 
   coreZoom();
@@ -145,11 +155,11 @@ function coreZoom() {
   document.body.appendChild(zoomTipDom);
   function zoom(callback) {
     if (window.zoomSetTimeout) clearTimeout(window.zoomSetTimeout);
-    const htmlZoom = window.localStorage.getItem("htmlZoom") || "100%";
-    const html = document.getElementsByTagName("html")[0];
+    const htmlZoom = window.localStorage.getItem('htmlZoom') || '100%';
+    const html = document.getElementsByTagName('html')[0];
     const zoom = callback(htmlZoom);
     html.style.zoom = zoom;
-    window.localStorage.setItem("htmlZoom", zoom);
+    window.localStorage.setItem('htmlZoom', zoom);
     zoomTipDom.innerHTML = zoom;
     zoomTipDom.style.display = 'block';
     zoomTipDom.classList.remove('ZoomTopTipAni');
@@ -158,16 +168,16 @@ function coreZoom() {
     }, 2500);
   }
   function zoomDefault() {
-    const htmlZoom = window.localStorage.getItem("htmlZoom");
+    const htmlZoom = window.localStorage.getItem('htmlZoom');
     if (htmlZoom) {
-      document.getElementsByTagName("html")[0].style.zoom = htmlZoom;
+      document.getElementsByTagName('html')[0].style.zoom = htmlZoom;
     }
   }
   function zoomIn() {
-    zoom((htmlZoom) => `${Math.min(parseInt(htmlZoom) + 10, 200)}%`);
+    zoom(htmlZoom => `${Math.min(parseInt(htmlZoom) + 10, 200)}%`);
   }
   function zoomOut() {
-    zoom((htmlZoom) => `${Math.max(parseInt(htmlZoom) - 10, 30)}%`);
+    zoom(htmlZoom => `${Math.max(parseInt(htmlZoom) - 10, 30)}%`);
   }
   function zoom0() {
     zoom(() => `100%`);
@@ -178,11 +188,11 @@ function coreZoom() {
   window.__zoom0 = zoom0;
 }
 
-if (
-  document.readyState === "complete" ||
-  document.readyState === "interactive"
-) {
+window.createWindow = () => {
+  invoke('open_window', { url: 'http://chat.openai.com' });
+};
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
   init();
 } else {
-  document.addEventListener("DOMContentLoaded", init);
+  document.addEventListener('DOMContentLoaded', init);
 }

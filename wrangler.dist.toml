@@ -1,4 +1,4 @@
-name = "react-cloudflare"
+name = "wai-chat-bot-react"
 main = "src/worker/index.ts"
 compatibility_date = "2022-05-03"
 compatibility_flags = ["streams_enable_constructors"]
